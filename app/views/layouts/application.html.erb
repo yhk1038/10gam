@@ -122,6 +122,16 @@ footer .copyright {
 </style>
 
 <body>
+<% if users_signed_in? %>
+  <div>
+      <a id="logout" class="btn btn-lg btn-info">FACEBOOL LOGOUT! <%= session[:id] %></a>
+      <div id="profile"><img src="<%= session[:img] %>"><span><%= session[:name] %></span></div>
+  </div>
+<% else %>
+  <div>
+      <a id="login" class="btn btn-lg btn-primary">FACEBOOL LOGIN! </a>
+  </div>
+<% end %>
 <div class="background">
 <div class="shadow">
 <div class="navspace">
@@ -220,6 +230,64 @@ footer .copyright {
     </div>
 </div>
 
+  
+
+<script>
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '996081407170811',
+      xfbml      : false,
+      cookie     : true,
+      version    : 'v2.8'
+    });
+    FB.getLoginStatus(function(response) {
+      console.log(response);
+      
+      if (response.status === 'connected') {
+          $('#logout').click(function() {
+              // alert("logout?");
+              FB.logout(function() {
+                  $.ajax({
+                      method: 'get',
+                      url: '/home/logout'
+                  })
+                  .done(function(){
+                      // alert("logout");
+                      window.location.reload();
+                  });
+              })
+          });
+          FB.api('/me', function(info) {
+            console.log(info);
+            $('#profile-name').text(info.name);
+            $('#profile-picture').attr('src', 'https://graph.facebook.com/' + info.id + '/picture?type=square');
+          })
+      } else {
+          $('#login').click(function() {
+              FB.login(function() {
+                  $.ajax({
+                      method: 'get',
+                      url: '/home/login'
+                  })
+                  .done(function(){
+                    // alert("done");
+                    window.location.reload();
+                  });
+              },{scope: 'email'});
+          });
+      }
+    });
+    // FB.AppEvents.logPageView();
+  };
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 </body>
 </html>
 
