@@ -2,11 +2,20 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
   <title>탄핵커톤 프로젝트</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
-  
+
+  <link rel="apple-touch-icon" href="/assets/images/logo_76.jpg">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/images/logo_76.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo_120.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo_152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo_180.png">
+  <link rel="shortcut icon" sizes="76x76" type="image/x-icon" href="/assets/images/logo_76.png">
+
   <!-- 합쳐지고 최소화된 최신 CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   <!-- 부가적인 테마 -->
@@ -15,9 +24,202 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
   <script src="https://use.fontawesome.com/e2c19a3411.js"></script>
 </head>
+
+<style>
+.background {
+  background:url('/assets/images/bg1.jpg') no-repeat center center;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 600px;
+}
+.shadow {
+    background:rgba(50,51,51,0.5);
+    height:100%;
+}
+.navbar-default {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #f7786a;
+}
+.navbar-brand, .navbar-nav>li>a {
+    text-shadow: none;
+}
+@media (max-width: 991px) {
+  .background {
+    height: 900px;
+  }
+  .navbar-default {
+    border-bottom: 1px solid #fff;
+  }
+  .navbar-collapse {
+    border-top: 0;
+    box-shadow:none;
+  }
+}
+
+
+footer {
+  height: 200px;
+/*  background:url('/assets/images/bg2.png') no-repeat center center;
+  background-size: cover;"*/
+  background:#323333;
+  color: #fff;
+  padding: 40px 0;
+  font-size: 13px;
+  z-index: 1;
+  position: relative;
+}
+footer .sns {
+  float: right;
+  text-align: center;
+  margin-bottom: 30px;
+}
+@media (max-width: 767px){
+  footer .sns {
+    float: none;
+  }
+}
+footer .sns img {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: 45px;
+  height: 45px;
+}
+footer .terms {
+  font-size: 15px;
+  border-color: transparent;
+}
+@media (max-width: 767px) {
+  footer .terms {
+    font-size: 13px;
+  }
+}
+footer .terms a {
+  color: #fff;
+  padding-right: 8px;
+}
+footer .copyright {
+  margin-top: 20px;
+  font-size: 12px;
+}
+@media (max-width: 767px) {
+  footer .copyright {
+    margin-top: 15px;
+    font-size: 0.9em;
+  }
+}
+</style>
+
 <body>
+<div class="background">
+<div class="shadow">
+<div class="navspace">
+  <nav class="navbar-default" style="background:transparent;">
+      <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="modal-icon-bar"></span>
+              <span class="modal-icon-bar"></span>
+              <span class="modal-icon-bar"></span>
+              </button>
+          </div>
+
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                  <% if session[:logined] and session[:usertype] == 'normal' %>
+                      <li><a href="#">십감감수성?</a></li>
+                      <li><a class="send_topic" href="#">금주의 주제</a></li>
+                      
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                              <span class="profile_image profile_menu" style="background-image: url(&quot;<%=session[:userimage]%>&quot;); vertical-align: top;"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a href="#">계정관리</a></li>
+                          <li><a href="#">로그아웃</a></li>
+                        </ul>
+                      </li>
+                  <% else %>
+                      <li><a href="#">십년감수성?</a></li>
+                      <li><a class="send_topic" href="#">금주의 주제</a></li>
+                      <li><a href="#">로그인</a></li>
+                  <% end %>
+              </ul>
+          </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+  </nav>
+</div>
 
 <%= yield %>
 
+<footer class="footer">
+  <div class="container">
+    <div class="sns col-md-4">
+      <h3 style="margin-top:0; margin-bottom:20px;">더 알아볼까요?</h3>
+      <a href="#" target="_blank" title="blog page">
+        <img alt="블로그" src="http://cita.co.kr/images/sns_blog.png">
+      </a>
+      <a href="https://www.facebook.com/%EC%8B%AD%EA%B0%90-%EC%8B%AD%EB%85%84%EA%B0%90%EC%88%98%EC%84%B1-1194827330582694/?fref=ts" target="_blank" title="facebook page">
+        <img alt="페이스북" src="http://cita.co.kr//images/sns_facebook.png">
+      </a>
+      <a href="#" target="_blank" title="instagram page">
+        <img alt="인스타그램" src="http://cita.co.kr//images/sns_instagram.png">
+      </a>
+    </div>
+    <div class="text-muted col-md-8">
+        <div class="terms">
+            <a href="#">개인정보취급방침</a>
+            <a href="#">이용약관</a>
+        </div>
+        <p class="copyright margin_top_20">
+            상호명 : 십년감수 | 대표 : 한승민, 유승준 | 개인정보책임자 : 짐쿠<br>
+            사업자등록번호 : 000-00-00000 | <span class="nowrap">주소 : 뉴스타파 회의실 | wns030711@naver.com
+        </p>
+    </div>
+  </div>
+  </div>
+</footer>
+</div> <!--shadow -->
+</div> <!--background -->
+
+<div id="school_modal" class="modal fade modal-shadow" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <svg viewBox="0 0 16 16" style="fill:#767676;height:16px;width:16px;display:block;" data-reactid=".9.0.0.0.0.0.0.0"><path d="M15.53 14.469a.75.75 0 1 1-1.06 1.062L7.99 9.073 1.53 15.53a.75.75 0 0 1-1.06-1.06l6.457-6.456L.47 1.581A.75.75 0 1 1 1.529.52l6.458 6.435L14.47.473a.75.75 0 1 1 1.06 1.06l-6.48 6.48 6.48 6.456z" data-reactid=".9.0.0.0.0.0.0.0.0"></path></svg>
+                </button>
+                <h4 class="modal-title">여러분의 학교를 등록하세요.</h4>
+            </div>
+            <div class="modal-body">
+                <form id="signup_form">
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control mini-box-border" placeholder="학교 이름">
+                    </div>
+                </form>
+                <div class="form-group margin_top_20">
+                    <button type="button" id="confirm_button" class="btn btn-success form-control" data-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>
+

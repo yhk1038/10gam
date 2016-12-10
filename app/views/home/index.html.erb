@@ -1,37 +1,45 @@
 <style>
+.nowrap {
+  white-space: nowrap;
+}
+
+h1 {
+    margin:0;
+    font-size:53px;
+}
+
 .content_1 {
-    background:url('/assets/images/bg1.jpg') no-repeat center center;
-    background-size: cover;
-    max-height: 600px;
     color: #fff;
 }
-
-.shadow {
-    padding-top : 20px;
-    background:rgba(50,51,51,0.5);
+.ranking {
+    margin-top:20px;
 }
-
 .ranking_box {
-    width: 500px;
+    background:rgba(50,51,51,0.8);
+    width: 90%;
     height: 200px;
     border: 1px solid #ccc;
-    margin-bottom: 30px;
+    margin: 0 auto 30px;
 }
 .ranking_title {
-    margin-left:10px;
+    margin-left:30px;
 }
 .content_2 {
     padding-top: 40px;
+    min-height: 800px;
 /*    background: url('/assets/images/bg2.png') no-repeat center center;
     background-size: cover;
     max-height: 600px;*/
+}
+
+.topic {
+    min-height:250px;
 }
 .topic_title {
     text-align: center;
 }
 .topic_box {
     text-align: center;
-    padding: 50px;
     font-weight: 400;
     font-family: Nanum Myeongjo, cursive;
     color:#111;
@@ -40,41 +48,138 @@
     border: 1px solid #ccc;
     border-radius : 10px;*/
 }
+.topic_quote {
+    text-align: center;
+    font-weight: 700;
+}
 .quote-left:before {
     content: '“';
-    font-size: 70px;
-    font-weight: 700;
-    margin:auto;
+    font-size: 80px;
 }
+
+.review {
+    margin-top:30px;
+}
+
 .review_title {
-    margin-left:10px;
+    margin-left:30px;
 }
 .review_box {
-    
+    width: 95%;
+    margin: 0 auto 30px;
 }
+.review_post {
+    margin: 10px 0;
+    padding: 15px;
+    min-height:80px;
+    background : rgb(243,243,243);
+    border-radius: 5px;
+}
+.review_posting {
+    margin: 30px 0;
+    padding: 0 15px;
+    min-height: 80px;
+}
+.review_profile {
+    height: 30px;
+    float:left;
+}
+.review_posting .review_text {
+    border-radius: 5px;
+    color: #aaa;
+    float:left;
+    padding:15px;
+}
+
+textarea {
+    border-radius:5px;
+    height:62px;
+}
+
+.btn-school {
+    padding: 10px;
+    border-radius:5px;
+    border:0;
+    background:#73d1f7;
+    color:#fff;
+}
+.btn-school:hover {
+    background:#39c0f7;
+}
+.btn-success {
+    background:#73d1f7;
+    border:0;
+}
+.btn-success:hover {
+    background:#39c0f7;
+    border:0;
+}
+
+
+.profile_image {
+    background:url('https://graph.facebook.com/1090029774447417/picture') no-repeat center center;
+    background-size: cover;
+    width:50px;
+    height:50px;
+    border-radius:100%;
+}
+.profile_name {
+}
+
+.modal-dialog {
+    margin-top: 100px;
+}
+@media (max-width: 991px) {
+    h1 {
+        font-size: 35px;
+    }
+    .review_profile {
+        text-align: center;
+        float:left;
+    }
+    .review_box, .review_button {
+        float:left;
+    }
+    .modal-dialog {
+        margin-top: 100px;
+    }
+}
+
+
 </style>
 
 <section class="content_1">
-    <div class="shadow">
-        <div style="height: 200px; padding-top: 25px;">
-            <div style="background:url('/assets/images/logo.png') no-repeat center center; background-size: contain; height:150px; "></div>
-        </div>
-        <div class="container">
-                <div class="ranking">
-                    <div class="col-md-6">
-                        <div class="ranking_title">
-                            <h3><i class="fa fa-trophy"></i> 내 순위</h3>
-                            <p>우리학교의 내 순위를 볼 수 있어요!</p>
-                        </div>
-                        <div class="ranking_box panel">
-                        </div>
+    <div style="height: 200px; padding-top: 25px;">
+        <div style="background:url('/assets/images/logo.png') no-repeat center center; background-size: contain; height:150px;"></div>
+    </div>
+    <div class="container">
+            <div class="ranking">
+                <div class="col-md-6">
+                    <div class="ranking_title">
+                        <h3><i class="fa fa-trophy"></i> 내 순위</h3>
+                        <p>학교별로 내 순위를 볼 수 있어요!</p>
                     </div>
-                    <div class="col-md-6">
-                        <div class="ranking_title">
-                            <h3><i class="fa fa-trophy"></i> 우리학교 순위</h3>
-                            <p>우리지역의 내 학교 순위를 볼 수 있어요!</p>
-                        </div>
-                        <div class="ranking_box panel">
+                    <% if session[:logined] and session[:usertype] == 'normal' %> 
+                    <div class="ranking_box panel" style="text-align:center; padding-top: 80px; color:#000;">
+                        클릭하고 학교를 등록하세요!
+                    </div>
+                    <% else %>
+                    <div class="ranking_box panel" style="text-align:center; padding: 80px;">
+                        <button class="btn-school" data-toggle="modal" data-target="#school_modal">로그인하면 사용할 수 있습니다.</button>
+                    </div>
+                    <% end %>
+                </div>
+                <div class="col-md-6">
+                    <div class="ranking_title">
+                        <h3><i class="fa fa-trophy"></i> 지역별 학교 순위</h3>
+                        <p>지역별로 학교 순위를 볼 수 있어요!</p>
+                    </div>
+                    <div class="ranking_box panel">
+                        <div style="padding:10px;">
+                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">1 중앙중학교 | 2300점</h4></div>
+                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">2 대아중학교 | 2250점</h4></div>
+                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">3 서경중학교 | 1800점</h4></div>
+                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">4 탄핵중학교 | 0점</h4></div>
                         </div>
                     </div>
                 </div>
@@ -89,23 +194,67 @@
                 <div class="topic_title">
                     <h3><i class="fa fa-newspaper-o"></i> 금주의 주제</h3>
                 </div>
-                <div class="quote-left"></div>
+                <div class="topic_quote">
+                    <div class="quote-left"></div>
+                </div>
                 <div class="topic_box">
-                    <h1 style="margin:0; font-size: 53px;">박근혜를 어떻게 생각하세요?</h1>
+                    <h1>박근혜를 어떻게 <span class="nowrap">생각하세요?</span></h1>
                 </div>
             </div>
         </div>    
-        <div class="topic">
+        <div class="review">
             <div class="col-md-12">
                 <div class="review_title">
-                    <h3><i class="fa fa-pencil"></i> 우리학교 댓글</h3>
-                    <p>학생 여러분의 의견을 들려주세요.</p>
-                    <div style="height:300px;"></div>
+                    <h3><i class="fa fa-pencil"></i> 당신의 십감은?</h3>
+                    <p>여러분의 의견을 들려주세요.</p>
                 </div>
                 <div class="review_box">
+                    <div class="review_post">
+                        <div class="review_profile col-md-2">
+                            <div class="profile_image col-md-4"></div>
+                            <div class="profile_name col-md-6"><p>유승준</p></div>
+                        </div>
+                        <div class="review_text col-md-10"><p>나는 박근혜가 싫어요.</p></div>
+                    </div>
+                    <div class="review_post">
+                        <div class="review_profile col-md-2">
+                            <div class="profile_image col-md-4"></div>
+                            <div class="profile_name col-md-6"><p>한승민</p></p></div>
+                        </div>
+                        <div class="review_text col-md-10"><p>저도 박근혜가 싫어요.</p></div>
+                    </div>
                     
+                    <div class="review_posting">
+                        <div class="review_profile col-md-2">
+                            <div class="profile_image col-md-4"></div>
+                            <div class="profile_name col-md-6"><p>유승준</p></div>
+                        </div>
+                        <textarea class="review_text col-md-9" placeholder="남을 비방하거나 모욕적인 의견은 1년 이하의 징역 또는 5000만원 이하의 벌금형에 처해질 수 있습니다."></textarea>
+                        <div class="col-md-1"><i class="fa fa-pencil" style="padding-top: 5px; font-size:45px;"></i></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
+<script>
+$(document).ready(function () {
+
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            $('.send_topic').fadeIn();
+        } else {
+//            $('.send_topic').fadeOut();
+        }
+    });
+
+    $('.send_topic').click(function () {
+        $("html, body").animate({
+            scrollTop: 600
+        }, 1500);
+        return false;
+    });
+});
+</script>
