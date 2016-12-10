@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem "koala", "~> 2.2"
+gem 'omniauth-facebook'
 gem 'roo'
 gem 'creek'
 gem 'devise'

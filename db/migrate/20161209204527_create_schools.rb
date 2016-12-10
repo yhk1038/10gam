@@ -1,11 +1,11 @@
-class CreateShcools < ActiveRecord::Migration
+class CreateSchools < ActiveRecord::Migration
   def change
-    create_table :shcools do |t|
+    create_table :schools do |t|
       t.string :kind
       t.string :region
       t.string :region2
       t.string :name
-      t.string :attr
+      t.string :addr
       t.timestamps null: false
     end
   end
