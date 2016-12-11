@@ -41,4 +41,15 @@ class HomeController < ApplicationController
     session.clear
     return render json: {type: true}
   end
+  
+  def search_school
+    result = School.where("addr LIKE ?", "%#{params[:query]}%")
+    return render json: result
+  end
+  
+  def save_school
+      User.find(params[:id]).update(school_id: params[:school_id]) if params[:id] != nil && params[:school_id] != nil
+      session[:school_id] = params[:school_id].to_i
+      redirect_to '/'
+  end
 end

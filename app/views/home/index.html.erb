@@ -153,15 +153,40 @@ textarea {
     <div class="container">
             <div class="ranking">
                 <div class="col-md-6">
+                    <% if users_signed_in? %>
+                        <% if session[:school_id].nil? %>
+                            <div class="ranking_title">
+                                <h3><i class="fa fa-trophy"></i> 내 순위</h3>
+                                <p>학교별로 내 순위를 볼 수 있어요!</p>
+                            </div>
+                            <div class="ranking_box panel" style="text-align:center; padding-top: 80px; color:#000;">
+                                <button class="btn-school" data-toggle="modal" data-target="#school_modal">클릭하고 학교를 등록하세요!</button>
+                            </div>
+                        <% else %>
+                            <div class="ranking_title">
+                                <h3><i class="fa fa-trophy"></i> 내 순위</h3>
+                                <p><%= School.find(session[:school_id]).name %> <button class="btn btn-xs btn-default" data-toggle="modal" data-target="#school_modal">변경</button></p>
+                            </div>
+                            <div class="ranking_box panel">
+                                <div style="padding: 10px;">
+                                    <% 
+                                        students    = School.find(session[:school_id]).users
+                                        sorted      = students.sort{|z| Reply.where(user_id: z.id).count}.first(5)
+                                        student_score_in_raw = sorted.map{|x| [x, Reply.where(user_id: x.id).count*150] }
+                                    %>
+                                    <% student_score_in_raw.each do |std| %>
+                                        <div style="padding: 10px; 15px;">
+                                            <h4 style="margin:0;font-weight:200; "><%= student_score_in_raw.index(std) + 1 %>위 <%= std[0]['name'] %> | <%= std[1] %>점</h4>
+                                        </div>
+                                    <% end %>
+                                </div>
+                            </div>
+                        <% end %>
+                    <% else %>
                     <div class="ranking_title">
                         <h3><i class="fa fa-trophy"></i> 내 순위</h3>
                         <p>학교별로 내 순위를 볼 수 있어요!</p>
                     </div>
-                    <% if users_signed_in? %>
-                    <div class="ranking_box panel" style="text-align:center; padding-top: 80px; color:#000;">
-                        <button class="btn-school" data-toggle="modal" data-target="#school_modal">클릭하고 학교를 등록하세요!</button>
-                    </div>
-                    <% else %>
                     <div class="ranking_box panel" style="text-align:center; padding: 80px;">
                         로그인하면 사용할 수 있습니다.
                     </div>
@@ -177,15 +202,14 @@ textarea {
                             <% 
                                 schools = Reply.all.map{|r| r.user.school.name}.sort
                                 arr = [2300, 2250, 1800, 0]
-                                sorted = schools.uniq.sort{|y| schools.count(y)}
+                                sorted = schools.uniq.sort{|y| schools.count(y)}.first(5)
                                 sort_n_count = sorted.map{|x| [x, schools.count(x)*150]}
                             %>
                             <% sort_n_count.each do |school| %>
-			<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; "><%= sort_n_count.index(school) + 1 %> <%= school[0] %> | <%= school[1] %>점</h4></div>
+                                <div style="padding: 10px; 15px;">
+                                    <h4 style="margin:0;font-weight:200; "><%= sort_n_count.index(school) + 1 %>위 <%= school[0] %> | <%= school[1] %>점</h4>
+                                </div>
                             <% end %>
-                            <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">2 대아중학교 | 2250점</h4></div>-->
-                            <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">3 서경중학교 | 1800점</h4></div>-->
-                            <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">4 탄핵중학교 | 0점</h4></div>-->
                         </div>
                     </div>
                 </div>

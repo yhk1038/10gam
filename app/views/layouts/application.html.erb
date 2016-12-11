@@ -172,30 +172,27 @@ footer .copyright {
 <%= yield %>
 
 <footer class="footer">
-  <div class="container">
-    <div class="sns col-md-4">
-      <h3 style="margin-top:0; margin-bottom:20px;">더 알아볼까요?</h3>
-      <a href="#" target="_blank" title="blog page">
-        <img alt="블로그" src="http://cita.co.kr/images/sns_blog.png">
-      </a>
-      <a href="https://www.facebook.com/%EC%8B%AD%EA%B0%90-%EC%8B%AD%EB%85%84%EA%B0%90%EC%88%98%EC%84%B1-1194827330582694/?fref=ts" target="_blank" title="facebook page">
-        <img alt="페이스북" src="http://cita.co.kr//images/sns_facebook.png">
-      </a>
-      <a href="#" target="_blank" title="instagram page">
-        <img alt="인스타그램" src="http://cita.co.kr//images/sns_instagram.png">
-      </a>
-    </div>
-    <div class="text-muted col-md-8">
-        <div class="terms">
-            <a href="#">개인정보취급방침</a>
-            <a href="#">이용약관</a>
+    <div class="container">
+        <div class="sns col-md-4">
+            <h3 style="margin-top:0; margin-bottom:20px;">더 알아볼까요?</h3>
+            <a href="#" target="_blank" title="blog page">
+                <img alt="블로그" src="http://cita.co.kr/images/sns_blog.png">
+            </a>
+            <a href="https://www.facebook.com/%EC%8B%AD%EA%B0%90-%EC%8B%AD%EB%85%84%EA%B0%90%EC%88%98%EC%84%B1-1194827330582694/?fref=ts" target="_blank" title="facebook page">
+                <img alt="페이스북" src="http://cita.co.kr//images/sns_facebook.png">
+            </a>
+            <a href="#" target="_blank" title="instagram page">
+                <img alt="인스타그램" src="http://cita.co.kr//images/sns_instagram.png">
+            </a>
         </div>
-        <p class="copyright margin_top_20">
-            상호명 : 십년감수 | 대표 : 한승민, 유승준 | 개인정보책임자 : 짐쿠<br>
-            사업자등록번호 : 000-00-00000 | <span class="nowrap">주소 : 뉴스타파 회의실 | wns030711@naver.com
-        </p>
+        <div class="text-muted col-md-8">
+            <div class="terms">
+                <a href="#">개인정보취급방침</a>
+                <a href="#">이용약관</a>
+            </div>
+            <p class="copyright margin_top_20">상호명 : 십년감수 | 대표 : 한승민, 유승준 | 개인정보책임자 : 짐쿠<br>사업자등록번호 : 000-00-00000 | <span class="nowrap">주소 : 뉴스타파 회의실 | wns030711@naver.com</p>
+        </div>
     </div>
-  </div>
 </footer>
 
 <div id="school_modal" class="modal fade modal-shadow" role="dialog">
@@ -207,17 +204,53 @@ footer .copyright {
                 <button type="button" class="close" data-dismiss="modal">
                     <svg viewBox="0 0 16 16" style="fill:#767676;height:16px;width:16px;display:block;" data-reactid=".9.0.0.0.0.0.0.0"><path d="M15.53 14.469a.75.75 0 1 1-1.06 1.062L7.99 9.073 1.53 15.53a.75.75 0 0 1-1.06-1.06l6.457-6.456L.47 1.581A.75.75 0 1 1 1.529.52l6.458 6.435L14.47.473a.75.75 0 1 1 1.06 1.06l-6.48 6.48 6.48 6.456z" data-reactid=".9.0.0.0.0.0.0.0.0"></path></svg>
                 </button>
-                <h4 class="modal-title">여러분의 학교를 등록하세요.</h4>
+                <h4 class="modal-title"><center>내 학교 등록하기</center></h4>
             </div>
             <div class="modal-body">
                 <form id="signup_form">
                     <div class="form-group">
-                        <input type="text" name="name" class="form-control mini-box-border" placeholder="학교명">
+                        <label id="search-label">내 학교 찾기</label>
+                        <input id="search-input" type="text" name="name" class="form-control mini-box-border" placeholder="학교를 검색하세요" style="border-bottom: none; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
+                        <a id="search-submit" class="btn btn-success btn-block" style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-top: none;">찾기</a>
                     </div>
                 </form>
+                <form id="signup_form" action="/home/save_school" method="POST">
+                    <div class="form-group">
+                        <input type="hidden" name="id" value="<%= session[:id] %>">
+                        <label id="result-label">내 학교 선택 <span id="result-label_span"></span></label>
+                        <select id="search-results" name="school_id" class="form-control mini-box-border" placeholder="학교명">
+                            <option> 검색 후 이용해 주세요</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="confirm_button" class="btn btn-warning form-control">등록</button>
+                </form>
                 <div class="form-group margin_top_20">
-                    <button type="button" id="confirm_button" class="btn btn-success form-control" data-dismiss="modal">확인</button>
+                    
                 </div>
+                <script>
+                    $("#search-submit").click(function(){
+                        var value = $("#search-input").val();
+                        console.log("검색어가 다음값으로 입력되었음을 확인 : " + " \"" + value + "\"");
+                        $.ajax({
+                            method: 'post',
+                            url: '/home/search_school',
+                            data: {query: value}
+                        })
+                        .done(function(after_search){
+                            console.log(after_search.length);
+                            
+                            var count = after_search.length;
+                            $("#result-label_span").empty();
+                            $("#result-label_span").append('(' + count + '개 학교를 찾음)');
+                            
+                            $("#search-results").empty();
+                            $.each(after_search, function(index, obj) {
+                                console.log(index + " : " + obj.name);
+                                $("#search-results").append('<option value="'+ obj.id +'"> ('+ obj.region +' '+ obj.region2 +') '+ obj.name +'</option>');
+                            });
+                        });
+                    });
+                </script>
             </div>
         </div>
 
@@ -248,9 +281,9 @@ footer .copyright {
                       url: '/home/logout'
                   })
                   .done(function(after_logout){
-                      //alert("logout");
                       FB.logout();
                       console.log(after_logout);
+                      //alert("logout");
                       window.location.reload();
                   });
               })
@@ -268,8 +301,8 @@ footer .copyright {
                       url: '/home/login'
                   })
                   .done(function(after_login){
-                    // alert("done");
                     console.log(after_login);
+                    // alert("done");
                     window.location.reload();
                   });
               },{scope: 'email'});
