@@ -154,14 +154,14 @@ footer .copyright {
                               <img class="profile_menu" src="<%= session[:img] %>" style="width:30px; height:30px; border-radius:100%;">
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a href="#">계정관리</a></li>
-                          <li><a id="logout" href="#">로그아웃</a></li>
+                          <li><a style="cursor:pointer;">계정관리</a></li>
+                          <li><a id="logout" style="cursor:pointer;">로그아웃</a></li>
                         </ul>
                       </li>
                   <% else %>
                       <li><a href="#">십년감수성</a></li>
                       <li><a class="send_topic" href="#">금주의 주제</a></li>
-                      <li><a id="login" href="#">로그인</a></li>
+                      <li><a id="login" style="cursor:pointer;">페이스북 로그인</a></li>
                   <% end %>
               </ul>
           </div><!-- /.navbar-collapse -->
@@ -247,8 +247,10 @@ footer .copyright {
                       method: 'get',
                       url: '/home/logout'
                   })
-                  .done(function(){
-                      // alert("logout");
+                  .done(function(after_logout){
+                      //alert("logout");
+                      FB.logout();
+                      console.log(after_logout);
                       window.location.reload();
                   });
               })
@@ -265,8 +267,9 @@ footer .copyright {
                       method: 'get',
                       url: '/home/login'
                   })
-                  .done(function(){
+                  .done(function(after_login){
                     // alert("done");
+                    console.log(after_login);
                     window.location.reload();
                   });
               },{scope: 'email'});

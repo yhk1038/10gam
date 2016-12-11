@@ -177,12 +177,11 @@ textarea {
                             <% 
                                 schools = Reply.all.map{|r| r.user.school.name}.sort
                                 arr = [2300, 2250, 1800, 0]
-                                compact = schools.uniq
+                                sorted = schools.uniq.sort{|y| schools.count(y)}
+                                sort_n_count = sorted.map{|x| [x, schools.count(x)*150]}
                             %>
-                            <% i = 0 %>
-                            <% compact.each do |school| %>
-                                <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; "><%= i + 1 %> <%= school %> | <%= arr[i] %>점</h4></div>
-                                <% i += 1%>
+                            <% sort_n_count.each do |school| %>
+			<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; "><%= sort_n_count.index(school) + 1 %> <%= school[0] %> | <%= school[1] %>점</h4></div>
                             <% end %>
                             <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">2 대아중학교 | 2250점</h4></div>-->
                             <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">3 서경중학교 | 1800점</h4></div>-->
