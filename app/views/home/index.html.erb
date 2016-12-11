@@ -219,6 +219,7 @@ textarea {
 </section>
 <section class="content_2">
     <div class="container">
+        <% topic = Topic.last %>
         <div class="topic">
             <div class="col-md-12">
                 <div class="topic_title">
@@ -228,7 +229,8 @@ textarea {
                     <div class="quote-left"></div>
                 </div>
                 <div class="topic_box">
-                    <h1><b>박근혜</b>를 어떻게 <span class="nowrap">생각하세요?</span></h1>
+                    <h1><%= topic.content %></h1>
+                    <!--<h1><b>박근혜</b>를 어떻게 <span class="nowrap">생각하세요?</span></h1>-->
                 </div>
             </div>
         </div>    
@@ -239,7 +241,7 @@ textarea {
                     <p>여러분의 의견을 들려주세요.</p>
                 </div>
                 <div class="review_box">
-                    <% Reply.where(topic_id: 1).all.each do |reply| %>
+                    <% Reply.where(topic_id: topic.id).all.each do |reply| %>
                     <div class="review_post">
                         <div class="review_profile col-md-2">
                             <div class="profile_image col-md-4" style="background:url('<%= reply.user.img %>');"></div>
@@ -263,7 +265,7 @@ textarea {
                                 <div class="profile_name col-md-6"><p><%= session[:name] %></p></div>
                             </div>
                             <input type="hidden" name="user_id" value="<%= session[:id] %>">
-                            <input type="hidden" name="topic_id" value="<%= "1" %>">
+                            <input type="hidden" name="topic_id" value="<%= topic.id %>">
                             <div class="col-md-10" style="padding:0; min-height: 60px;">
                             <textarea class="review_text col-md-10" name="content" placeholder="남을 비방하거나 모욕적인 의견은 1년 이하의 징역 또는 5000만원 이하의 벌금형에 처해질 수 있습니다."></textarea>
                             <div class="col-md-2"><button type="submit"><i class="fa fa-pencil" style="padding-top: 5px; font-size:45px;"></i></button></div>
