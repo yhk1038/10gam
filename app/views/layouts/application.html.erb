@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <title>탄핵커톤 프로젝트</title>
+  <title>십년감수성</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -43,6 +43,7 @@
   background: transparent;
   box-shadow: none;
   border-radius: 0;
+  height:60px;
 }
 .navbar-default .navbar-nav>li>a {
     color: #fff;
@@ -67,9 +68,8 @@
   }
 }
 
-
 footer {
-  height: 200px;
+  min-height: 200px;
 /*  background:url('/assets/images/bg2.png') no-repeat center center;
   background-size: cover;"*/
   background:#323333;
@@ -119,19 +119,16 @@ footer .copyright {
     font-size: 0.9em;
   }
 }
+
+.dropdown-menu {
+  left:-1px;
+  background:rgba(243,243,243,0.8);
+  border-radius:0;
+}
 </style>
 
 <body>
-<% if users_signed_in? %>
-  <div>
-      <a id="logout" class="btn btn-lg btn-info">FACEBOOL LOGOUT! <%= session[:id] %></a>
-      <div id="profile"><img src="<%= session[:img] %>"><span><%= session[:name] %></span></div>
-  </div>
-<% else %>
-  <div>
-      <a id="login" class="btn btn-lg btn-primary">FACEBOOL LOGIN! </a>
-  </div>
-<% end %>
+
 <div class="background">
 <div class="shadow">
 <div class="navspace">
@@ -148,23 +145,23 @@ footer .copyright {
 
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
-                  <% if session[:logined] and session[:usertype] == 'normal' %>
-                      <li><a href="#">십감감수성?</a></li>
+                  <% if users_signed_in? %>
+                      <li><a href="#">십년감수성</a></li>
                       <li><a class="send_topic" href="#">금주의 주제</a></li>
                       
                       <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              <span class="profile_image profile_menu" style="background-image: url(&quot;<%=session[:userimage]%>&quot;); vertical-align: top;"></span>
+                              <img class="profile_menu" src="<%= session[:img] %>" style="width:30px; height:30px; border-radius:100%;">
                         </a>
                         <ul class="dropdown-menu">
                           <li><a href="#">계정관리</a></li>
-                          <li><a href="#">로그아웃</a></li>
+                          <li><a id="logout" href="#">로그아웃</a></li>
                         </ul>
                       </li>
                   <% else %>
-                      <li><a href="#">십년감수성?</a></li>
+                      <li><a href="#">십년감수성</a></li>
                       <li><a class="send_topic" href="#">금주의 주제</a></li>
-                      <li><a href="#">로그인</a></li>
+                      <li><a id="login" href="#">로그인</a></li>
                   <% end %>
               </ul>
           </div><!-- /.navbar-collapse -->
@@ -199,10 +196,7 @@ footer .copyright {
         </p>
     </div>
   </div>
-  </div>
 </footer>
-</div> <!--shadow -->
-</div> <!--background -->
 
 <div id="school_modal" class="modal fade modal-shadow" role="dialog">
     <div class="modal-dialog modal-sm">
@@ -218,7 +212,7 @@ footer .copyright {
             <div class="modal-body">
                 <form id="signup_form">
                     <div class="form-group">
-                        <input type="text" name="name" class="form-control mini-box-border" placeholder="학교 이름">
+                        <input type="text" name="name" class="form-control mini-box-border" placeholder="학교명">
                     </div>
                 </form>
                 <div class="form-group margin_top_20">
@@ -230,7 +224,8 @@ footer .copyright {
     </div>
 </div>
 
-  
+</div> <!--shadow -->
+</div> <!--background -->
 
 <script>
 

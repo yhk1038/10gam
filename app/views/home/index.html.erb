@@ -67,30 +67,17 @@ h1 {
 }
 .review_box {
     width: 95%;
-    margin: 0 auto 30px;
+    margin: 40px auto 30px;
 }
 .review_post {
-    margin: 10px 0;
-    padding: 15px;
-    min-height:80px;
-    background : rgb(243,243,243);
-    border-radius: 5px;
+    margin: 10px 0 20px;
+    min-height:60px;
 }
-.review_posting {
-    margin: 30px 0;
-    padding: 0 15px;
-    min-height: 80px;
-}
+
 .review_profile {
-    height: 30px;
-    float:left;
+    min-height: 60px;
 }
-.review_posting .review_text {
-    border-radius: 5px;
-    color: #aaa;
-    float:left;
-    padding:15px;
-}
+
 
 textarea {
     border-radius:5px;
@@ -116,15 +103,21 @@ textarea {
     border:0;
 }
 
-
 .profile_image {
     background:url('https://graph.facebook.com/1090029774447417/picture') no-repeat center center;
     background-size: cover;
     width:50px;
     height:50px;
     border-radius:100%;
+    margin:auto;
 }
 .profile_name {
+}
+.review_text {
+    background:#eee;
+    min-height:60px;
+    border-radius:5px;
+    padding:10px;
 }
 
 .modal-dialog {
@@ -136,13 +129,17 @@ textarea {
     }
     .review_profile {
         text-align: center;
-        float:left;
-    }
-    .review_box, .review_button {
-        float:left;
     }
     .modal-dialog {
         margin-top: 100px;
+    }
+    .col-md-10 .review_text {
+        float:left;
+        width:83.33333333%;
+    }
+    .col-md-10 .col-md-2 {
+        float:left;
+        width:16.66666667%;
     }
 }
 
@@ -160,13 +157,13 @@ textarea {
                         <h3><i class="fa fa-trophy"></i> 내 순위</h3>
                         <p>학교별로 내 순위를 볼 수 있어요!</p>
                     </div>
-                    <% if session[:logined] and session[:usertype] == 'normal' %> 
+                    <% if users_signed_in? %>
                     <div class="ranking_box panel" style="text-align:center; padding-top: 80px; color:#000;">
-                        클릭하고 학교를 등록하세요!
+                        <button class="btn-school" data-toggle="modal" data-target="#school_modal">클릭하고 학교를 등록하세요!</button>
                     </div>
                     <% else %>
                     <div class="ranking_box panel" style="text-align:center; padding: 80px;">
-                        <button class="btn-school" data-toggle="modal" data-target="#school_modal">로그인하면 사용할 수 있습니다.</button>
+                        로그인하면 사용할 수 있습니다.
                     </div>
                     <% end %>
                 </div>
@@ -176,11 +173,20 @@ textarea {
                         <p>지역별로 학교 순위를 볼 수 있어요!</p>
                     </div>
                     <div class="ranking_box panel">
-                        <div style="padding:10px;">
-                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">1 중앙중학교 | 2300점</h4></div>
-                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">2 대아중학교 | 2250점</h4></div>
-                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">3 서경중학교 | 1800점</h4></div>
-                        <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">4 탄핵중학교 | 0점</h4></div>
+                        <div style="padding: 10px;">
+                            <% 
+                                schools = Reply.all.map{|r| r.user.school.name}.sort
+                                arr = [2300, 2250, 1800, 0]
+                                compact = schools.uniq
+                            %>
+                            <% i = 0 %>
+                            <% compact.each do |school| %>
+                                <div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; "><%= i + 1 %> <%= school %> | <%= arr[i] %>점</h4></div>
+                                <% i += 1%>
+                            <% end %>
+                            <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">2 대아중학교 | 2250점</h4></div>-->
+                            <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">3 서경중학교 | 1800점</h4></div>-->
+                            <!--<div style="padding: 10px; 15px;"><h4 style="margin:0;font-weight:200; ">4 탄핵중학교 | 0점</h4></div>-->
                         </div>
                     </div>
                 </div>
@@ -199,7 +205,7 @@ textarea {
                     <div class="quote-left"></div>
                 </div>
                 <div class="topic_box">
-                    <h1>박근혜를 어떻게 <span class="nowrap">생각하세요?</span></h1>
+                    <h1><b>박근혜</b>를 어떻게 <span class="nowrap">생각하세요?</span></h1>
                 </div>
             </div>
         </div>    
@@ -210,29 +216,39 @@ textarea {
                     <p>여러분의 의견을 들려주세요.</p>
                 </div>
                 <div class="review_box">
+                    <% Reply.where(topic_id: 1).all.each do |reply| %>
                     <div class="review_post">
                         <div class="review_profile col-md-2">
-                            <div class="profile_image col-md-4"></div>
-                            <div class="profile_name col-md-6"><p>유승준</p></div>
+                            <div class="profile_image col-md-4" style="background:url('<%= reply.user.img %>');"></div>
+                            <div class="profile_name col-md-6"><p><%= reply.user.name %></p></div>
                         </div>
-                        <div class="review_text col-md-10"><p>나는 박근혜가 싫어요.</p></div>
+                        <div class="review_text col-md-10">
+                            <p><%= reply.content %>
+                                <% if session[:id] == reply.user.id %>
+                                <a style="float:right; right: 0px;" href="/reply/deletes/<%= reply.id %>" class="btn btn-xs btn-danger">삭제</a>
+                                <% end %>
+                            </p>
+                        </div>
                     </div>
+                    <% end %>
+                    <% if users_signed_in? %>
+                    <!--댓글 입력 폼 Do-->
                     <div class="review_post">
-                        <div class="review_profile col-md-2">
-                            <div class="profile_image col-md-4"></div>
-                            <div class="profile_name col-md-6"><p>한승민</p></p></div>
-                        </div>
-                        <div class="review_text col-md-10"><p>저도 박근혜가 싫어요.</p></div>
+                        <form action="/reply/saves" method="post">
+                            <div class="review_profile col-md-2">
+                                <div class="profile_image col-md-4" style="background-image:url('<%= session[:img] %>');"></div>
+                                <div class="profile_name col-md-6"><p><%= session[:name] %></p></div>
+                            </div>
+                            <input type="hidden" name="user_id" value="<%= session[:id] %>">
+                            <input type="hidden" name="topic_id" value="<%= "1" %>">
+                            <div class="col-md-10" style="padding:0; min-height: 60px;">
+                            <textarea class="review_text col-md-10" name="content" placeholder="남을 비방하거나 모욕적인 의견은 1년 이하의 징역 또는 5000만원 이하의 벌금형에 처해질 수 있습니다."></textarea>
+                            <div class="col-md-2"><button type="submit"><i class="fa fa-pencil" style="padding-top: 5px; font-size:45px;"></i></button></div>
+                            </div>
+                        </form>
                     </div>
-                    
-                    <div class="review_posting">
-                        <div class="review_profile col-md-2">
-                            <div class="profile_image col-md-4"></div>
-                            <div class="profile_name col-md-6"><p>유승준</p></div>
-                        </div>
-                        <textarea class="review_text col-md-9" placeholder="남을 비방하거나 모욕적인 의견은 1년 이하의 징역 또는 5000만원 이하의 벌금형에 처해질 수 있습니다."></textarea>
-                        <div class="col-md-1"><i class="fa fa-pencil" style="padding-top: 5px; font-size:45px;"></i></div>
-                    </div>
+                    <% end %>
+                    <!--댓글 폼 End-->
                 </div>
             </div>
         </div>

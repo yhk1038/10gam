@@ -16,7 +16,7 @@ class ReplyController < ApplicationController
 
   def deletes
     Reply.find(params[:id]).delete
-    
-    return render json: {status: true}
+    redirect_to :back
+    # return render json: {status: true}
   end
 end
