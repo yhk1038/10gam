@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'seed_dump'
 gem "koala", "~> 2.2"
 gem 'omniauth-facebook'
 gem 'roo'
